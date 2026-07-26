@@ -1,0 +1,26 @@
+schema: spec-driven
+
+# Contexto do projeto (opcional)
+# Exibido para a IA ao criar artefatos.
+# Adicione seu stack tencnológico, convenções, guias de estilo, conhecimneto do domínio, frameworks, bibliotecas e outras informações relevantes.
+# Exemplo:
+#   context: |
+#     Stack tencnológico: TypeScript, Node.js, React, PostgreSQL
+#     Usamos conventional commits e seguimos o guia de estilo do Airbnb.
+#     Domínio: Sistema de gerenciamento de tarefas para equipes ágeis.
+
+# Regras por artefato (opcional)
+# Adicione regras personalizadas para artefatos específicos. Se não houver regras, a IA seguirá as regras padrão.
+# Exemplo:
+#   rules:
+#     proposal:
+#       - Manter propostas com menos de 500 palavras.
+#       - Sempre usar inglês para propostas.
+#       - Sempre incluior uma seção "Não-objetivos", "Não-escopo" ou "Não-funcionalidades" para esclarecer o que não será abordado.
+#     tasks:
+#       - Dividir tarefas grandes em blocos de no máximo 2 horas.
+#       - Sempre usar português para tarefas.
+#     code:
+#       - Sempre usar TypeScript para código.
+#       - Sempre usar React para interfaces de usuário.
+#       - Sempre usar PostgreSQL para banco de dados.

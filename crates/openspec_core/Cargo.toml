@@ -1,0 +1,12 @@
+
+[package]
+name = "openspec_core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Core only depends on cross-cutting concerns that are framework-agnostic
+serde = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }
+async-trait = { workspace = true }
