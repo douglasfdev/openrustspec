@@ -1,9 +1,13 @@
 use std::sync::Arc;
 use openspec_core::{
-    application::create_proposal::{CreateProposalCommand, CreateProposalUseCase},
-    domain::{Proposal, ProposalStatus},
-    ports::llm_provider::LlmProvider,
-    Result,
+    application::usecase::generate_proposal::{
+        GenerateProposalCommand, GenerateProposalUseCase,
+    },
+    domain::model::spec::Spec,
+    domain::ports::llm_provider::{
+        self, GenerateSpecRequest, GenerateSpecResponse, LlmProvider,
+    },
+    error::{Error, Result},
 };
 use openspec_cli::{Cli, Commands, parse};
 
@@ -12,15 +16,26 @@ struct MockLlmProvider;
 
 #[async_trait::async_trait]
 impl LlmProvider for MockLlmProvider {
-    async fn generate_proposal(&self, context: &str) -> Result<Proposal> {
-        println!("\n[MockLlmProvider] Recebido prompt: \"{}\"", context);
-        let mut proposal = Proposal::default();
-        proposal.title = "API de Usuários".to_string();
-        proposal.summary = format!("Uma proposta gerada a partir do prompt: '{}'", context);
-        proposal.non_goals = vec!["Não incluirá autenticação OAuth2".to_string()];
-        proposal.status = ProposalStatus::Proposed;
-        println!("[MockLlmProvider] Gerando proposta simulada...");
-        Ok(proposal)
+    async fn generate_spec(
+        &self,
+        request: GenerateSpecRequest,
+    ) -> Result<GenerateSpecResponse> {
+        println!("\n[MockLlmProvider] Recebido objetivo: \"{}\"", request.objective);
+        let mock_yaml_spec = format!(
+            r#"
+name: "API de Usuários"
+description: "Uma proposta gerada a partir do objetivo: {}"
+tasks:
+  - id: 1
+    description: "Criar a estrutura do módulo de usuário"
+    completed: false
+"#,
+            request.objective
+        );
+        println!("[MockLlmProvider] Gerando especificação YAML simulada...");
+        Ok(GenerateSpecResponse {
+            spec_yaml: mock_yaml_spec,
+        })
     }
 }
 
@@ -30,7 +45,7 @@ async fn main() -> anyhow::Result<()> {
 
     // 2. Injeção de Dependência
     let llm_provider = Arc::new(MockLlmProvider);
-    let create_proposal_use_case = CreateProposalUseCase::new(llm_provider.clone());
+    let generate_proposal_use_case = GenerateProposalUseCase::new(llm_provider.clone());
 
     // 3. Parse da CLI
     let cli = parse();
@@ -39,20 +54,24 @@ async fn main() -> anyhow::Result<()> {
     match cli.command {
         Commands::Propose { prompt } => {
             println!("\nComando '/rustsx:propose' detectado.");
-            let command = CreateProposalCommand { prompt };
-            match create_proposal_use_case.execute(command).await {
-                Ok(proposal) => {
-                    println!("\n--- Proposta Gerada com Sucesso ---");
-                    println!("ID: {}", proposal.id);
-                    println!("Título: {}", proposal.title);
-                    println!("Resumo: {}", proposal.summary);
-                    println!("Status: {:?}", proposal.status);
-                    println!("Não Escopo: {:?}", proposal.non_goals);
+            let command = GenerateProposalCommand {
+                objective: prompt,
+                context: "(No context provided)".to_string(), // Contexto virá da análise do projeto no futuro
+            };
+            match generate_proposal_use_case.execute(command).await {
+                Ok(spec) => {
+                    println!("\n--- Especificação Gerada com Sucesso ---");
+                    println!("Nome: {}", spec.name);
+                    println!("Descrição: {}", spec.description);
+                    println!("Passos:");
+                    for step in spec.steps {
+                        println!("  - {} ({})", step.name, step.command);
+                    }
                     println!("-------------------------------------");
-                    println!("\nPróximo passo: Execute '/rustsx:apply' para aplicar esta proposta (ainda não implementado).");
+                    println!("\nPróximo passo: Execute '/rustsx:apply' para aplicar esta especificação (ainda não implementado).");
                 }
                 Err(e) => {
-                    eprintln!("Erro ao gerar proposta: {}", e);
+                    eprintln!("Erro ao gerar especificação: {}", e);
                 }
             }
         }

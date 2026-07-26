@@ -1,7 +1,9 @@
 
 use std::sync::Arc;
 use openspec_adapters::llm_adapter::ollama::OllamaAdapter;
-use openspec_core::application::usecase::generate_proposal::GenerateProposalUseCase;
+use openspec_core::application::usecase::generate_proposal::{
+    GenerateProposalCommand, GenerateProposalUseCase,
+};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -20,14 +22,16 @@ async fn main() -> anyhow::Result<()> {
 
     // --- Execution ---
 
-    // 4. Define a high-level objective
-    let objective = "Create a new Rust function that takes two integers and returns their sum.".to_string();
-    let context = "The project is a simple Rust library. No external dependencies needed.".to_string();
+    // 4. Define the command
+    let command = GenerateProposalCommand {
+        objective: "Create a new Rust function that takes two integers and returns their sum.".to_string(),
+        context: "The project is a simple Rust library. No external dependencies needed.".to_string(),
+    };
 
-    println!("Generating spec for objective: '{}'...", objective);
+    println!("Generating spec for objective: '{}'...", command.objective);
 
     // 5. Execute the use case
-    let spec = generate_proposal_use_case.execute(objective, context).await?;
+    let spec = generate_proposal_use_case.execute(command).await?;
 
     // 6. Print the result
     println!("\n--- Generated Spec ---");

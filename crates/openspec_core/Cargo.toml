@@ -10,3 +10,4 @@ serde = { workspace = true }
 thiserror = { workspace = true }
 uuid = { workspace = true }
 async-trait = { workspace = true }
+serde_yaml = { workspace = true }
