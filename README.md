@@ -1,81 +1,81 @@
-# OpenRustSpec - Agente de IA para Spec-Driven Development
+# OpenRustSpec - An AI Agent for Spec-Driven Development
 
-**OpenRustSpec** é um framework e agente de IA para **Desenvolvimento Orientado a Especificações** (*Spec-Driven Development*), construído em Rust com uma arquitetura hexagonal. Ele transforma descrições em linguagem natural em propostas, planos e, eventualmente, em código, guiando o processo de desenvolvimento de forma interativa.
+**OpenRustSpec** is a framework and AI agent for **Spec-Driven Development**, built in Rust with a hexagonal architecture. It transforms natural language descriptions into proposals, plans, and eventually code, guiding the development process interactively.
 
-## Documentação
+## Documentation
 
-Para uma documentação mais detalhada, visite:
+For more detailed documentation, please visit:
 
-*   [Documentação em Português (Brasil)](./docs/pt-br/README.md)
+*   [Documentation in Brazilian Portuguese](./docs/pt-br/README.md)
 
-## A Nova Arquitetura
+## The New Architecture
 
-O `openrustspec` foi reescrito do zero para seguir os princípios da **Arquitetura Hexagonal (Ports & Adapters)**. Isso garante um sistema desacoplado, testável e extensível, pronto para produção.
+`openrustspec` has been rewritten from the ground up to follow the principles of **Hexagonal Architecture (Ports & Adapters)**. This ensures a decoupled, testable, and extensible system ready for production.
 
-A estrutura do projeto agora é um workspace Cargo com responsabilidades claramente divididas:
+The project structure is now a Cargo workspace with clearly divided responsibilities:
 
 ```text
 openrustspec-rs/
 ├── crates/
-│   ├── openspec_core/ # O coração: Domain + Application + Ports
-│   ├── openspec_cli/  # Primary Adapter: A CLI com os comandos do agente
-│   └── ...            # Outros adapters (LLM, FileSystem, etc.)
+│   ├── openspec_core/ # The Core: Domain + Application + Ports
+│   ├── openspec_cli/  # Primary Adapter: The CLI with agent commands
+│   └── ...            # Other adapters (LLM, FileSystem, etc.)
 └── runtimes/
-    └── agent/         # O executável principal que une tudo
+    └── agent/         # The main executable that ties everything together
 ```
 
-## Como Usar o Agente
+## How to Use the Agent
 
-O `openrustspec` opera como um agente de linha de comando. Para instalá-lo e torná-lo disponível globalmente, use o Cargo:
+`openrustspec` operates as a command-line agent. To install it and make it globally available, use Cargo:
 
 ```bash
 cargo install --path .
 ```
 
-### Comandos Principais
+### Main Commands
 
-A interação com o agente é feita através de comandos específicos que funcionam como "skills".
+Interaction with the agent is done through specific commands that function as "skills".
 
-#### 1. Propor uma Mudança (`/rustsx:propose`)
+#### 1. Propose a Change (`/rustsx:propose`)
 
-Use este comando para pedir à IA que crie uma proposta de especificação a partir de uma ideia em linguagem natural.
+Use this command to ask the AI to create a specification proposal from a natural language idea.
 
-**Exemplo:**
+**Example:**
 
 ```bash
-agent /rustsx:propose "Quero criar uma API REST para um sistema de blog com posts e comentários"
+agent /rustsx:propose "I want to create a REST API for a blog system with posts and comments"
 ```
 
-**O que acontece:**
+**What Happens:**
 
-1.  O **Adapter de CLI** (`openspec_cli`) parseia o comando.
-2.  Ele invoca o **Caso de Uso** `CreateProposal` na camada de `Application`.
-3.  O caso de uso chama o **Port** `LlmProvider`.
-4.  O **Adapter de LLM** (ex: `OpenAiAdapter`) é ativado, envia o prompt para a IA e traduz a resposta para uma entidade de domínio `Proposal`.
-5.  A proposta é exibida para o usuário para aprovação.
+1.  The **CLI Adapter** (`openspec_cli`) parses the command.
+2.  It invokes the `CreateProposal` **Use Case** in the `Application` layer.
+3.  The use case calls the `LlmProvider` **Port**.
+4.  The **LLM Adapter** (e.g., `OpenAiAdapter`) is activated, sends the prompt to the AI, and translates the response into a `Proposal` domain entity.
+5.  The proposal is displayed to the user for approval.
 
-#### 2. Aplicar uma Proposta (`/rustsx:apply`)
+#### 2. Apply a Proposal (`/rustsx:apply`)
 
-Uma vez que uma proposta foi gerada e aprovada, este comando instrui o agente a criar um plano de execução detalhado e, em seguida, aplicar esse plano.
+Once a proposal has been generated and approved, this command instructs the agent to create a detailed execution plan and then apply it.
 
-**Exemplo:**
+**Example:**
 
 ```bash
 agent /rustsx:apply
 ```
 
-**O que acontece (Roadmap):**
+**What Happens (Roadmap):**
 
-1.  O agente identifica a última proposta aprovada.
-2.  Usa a IA para gerar um `Plan`, que é uma lista de tarefas concretas (ex: `CreateFile`, `ModifyFile`).
-3.  Pede a confirmação do usuário para executar o plano.
-4.  Executa cada tarefa do plano usando os **Adapters** apropriados (ex: `FileSystemAdapter` para criar um arquivo, `GitAdapter` para commitar a mudança).
+1.  The agent identifies the last approved proposal.
+2.  It uses the AI to generate a `Plan`, which is a list of concrete tasks (e.g., `CreateFile`, `ModifyFile`).
+3.  It asks for user confirmation to execute the plan.
+4.  It executes each task in the plan using the appropriate **Adapters** (e.g., `FileSystemAdapter` to create a file, `GitAdapter` to commit the change).
 
-## Roadmap de Desenvolvimento
+## Development Roadmap
 
--   [x] **Fundação da Arquitetura Hexagonal**: Workspace e crates definidos.
--   [x] **Fluxo de Proposta (`/rustsx:propose`)**: Implementação do caso de uso com um LLM mockado.
--   [ ] **Fluxo de Aplicação (`/rustsx:apply`)**: Implementação do caso de uso para gerar e executar planos.
--   [ ] **Integração Real com LLM**: Substituir o mock por um adapter real para OpenAI, lendo a chave de um `config.yml`.
--   [ ] **Persistência**: Implementar um `Repository` para salvar e carregar o estado das especificações e propostas.
--   [ ] **Geração de Código**: Criar `CodeGeneratorAdapters` que transformam a especificação em código boilerplate em várias linguagens.
+-   [x] **Hexagonal Architecture Foundation**: Workspace and crates defined.
+-   [x] **Proposal Flow (`/rustsx:propose`)**: Use case implemented with a mocked LLM.
+-   [ ] **Application Flow (`/rustsx:apply`)**: Implement the use case to generate and execute plans.
+-   [ ] **Real LLM Integration**: Replace the mock with a real adapter for OpenAI, reading the API key from a `config.yml` file.
+-   [ ] **Persistence**: Implement a `Repository` to save and load the state of specifications and proposals.
+-   [ ] **Code Generation**: Create `CodeGeneratorAdapters` that transform the specification into boilerplate code in various languages.
