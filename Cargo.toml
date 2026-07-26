@@ -1,20 +1,26 @@
-[package]
-name = "openrustspec"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+resolver = "2"
+members = [
+    "crates/*",
+    "runtimes/*",
+]
 
-[dependencies]
+[workspace.dependencies]
+# Internal Crates
+openspec_core = { path = "crates/openspec_core" }
+openspec_cli = { path = "crates/openspec_cli" }
+openspec_llm = { path = "crates/openspec_llm" }
+openspec_fs = { path = "crates/openspec_fs" }
+openspec_vcs = { path = "crates/openspec_vcs" }
+
+# External Crates
+anyhow = "1.0"
+async-trait = "0.1"
+axum = "0.7"
+clap = { version = "4.0", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_yaml = "0.9"
-thiserror = "2.0.18"
-clap = { version = "4.0", features = ["derive"] }
-anyhow = "1.0"
-
-
-[lib]
-name = "openrustspec"
-path = "src/lib.rs"
-
-[dev-dependencies]
-tempfile = "3.3"
+thiserror = "1.0" # Note: Pinned to 1.0 for stability in this example
+tokio = { version = "1", features = ["full"] }
+uuid = { version = "1.8", features = ["v4", "serde"] }

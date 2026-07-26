@@ -1,0 +1,1 @@
+// This crate will contain adapters for LLM providers (OpenAI, Anthropic, etc.)

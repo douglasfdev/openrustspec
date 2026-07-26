@@ -1,0 +1,1 @@
+// This crate will contain adapters for version control systems (e.g., Git).
