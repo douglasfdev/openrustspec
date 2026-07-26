@@ -25,3 +25,4 @@ git2 = "0.18"
 openspec_core = { path = "crates/openspec_core" }
 openspec_adapters = { path = "crates/openspec_adapters" }
 openspec_engine = { path = "crates/openspec_engine" }
+openspec_cli = { path = "crates/openspec_cli" }
