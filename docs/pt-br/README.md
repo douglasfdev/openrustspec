@@ -25,7 +25,7 @@ Existem duas maneiras de instalar e usar o OpenSpec, dependendo de suas necessid
 
 ### Para Usuários Finais (Recomendado)
 
-A maneira mais fácil de usar o OpenSpec é baixar um binário pré-compilado para o seu sistema operacional a partir da [página de Releases](https://github.com/your-username/openrustspec/releases) no GitHub. Este método **não** exige que você tenha o Rust instalado.
+A maneira mais fácil de usar o OpenSpec é baixar um binário pré-compilado para o seu sistema operacional a partir da [página de Releases](https://github.com/douglasfdev/openrustspec/releases/) no GitHub. Este método **não** exige que você tenha o Rust instalado.
 
 1.  Baixe o arquivo `.zip` para o seu SO (ex: `openrustspec-x86_64-pc-windows-msvc.zip`).
 2.  Descompacte o arquivo.
