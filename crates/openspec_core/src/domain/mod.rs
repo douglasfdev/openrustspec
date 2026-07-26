@@ -1,3 +1,4 @@
-pub mod proposal;
 
-pub use proposal::*;
+pub mod model;
+pub mod events;
+pub mod ports;

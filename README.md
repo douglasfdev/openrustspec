@@ -1,81 +1,63 @@
-# OpenRustSpec - An AI Agent for Spec-Driven Development
 
-**OpenRustSpec** is a framework and AI agent for **Spec-Driven Development**, built in Rust with a hexagonal architecture. It transforms natural language descriptions into proposals, plans, and eventually code, guiding the development process interactively.
+# OpenSpec-rs
 
-## Documentation
+✨ **An AI-powered framework for Spec-Driven Development.** ✨
 
-For more detailed documentation, please visit:
+OpenSpec is a tool that transforms business objectives, described in natural language, into functional code, automating software development tasks.
 
-*   [Documentation in Brazilian Portuguese](./docs/pt-br/README.md)
+Imagine telling your terminal: `"create a new API endpoint to register a product with a name, price, and description"` and watching the code being generated and applied to your project. That's the vision of OpenSpec.
 
-## The New Architecture
+---
 
-`openrustspec` has been rewritten from the ground up to follow the principles of **Hexagonal Architecture (Ports & Adapters)**. This ensures a decoupled, testable, and extensible system ready for production.
+## 🚀 How It Works
 
-The project structure is now a Cargo workspace with clearly divided responsibilities:
+The OpenSpec workflow is designed to be simple and powerful, acting as a software engineering co-pilot:
 
-```text
-openrustspec-rs/
-├── crates/
-│   ├── openspec_core/ # The Core: Domain + Application + Ports
-│   ├── openspec_cli/  # Primary Adapter: The CLI with agent commands
-│   └── ...            # Other adapters (LLM, FileSystem, etc.)
-└── runtimes/
-    └── agent/         # The main executable that ties everything together
-```
+1.  **Objective (Propose):** You provide a high-level objective to OpenSpec. (e.g., "Refactor function X to be more performant").
 
-## How to Use the Agent
+2.  **Specification Generation (Spec):** OpenSpec uses a Large Language Model (LLM) to analyze your objective and the context of your code, generating a detailed, step-by-step action plan. This plan is the "Spec".
 
-`openrustspec` operates as a command-line agent. To install it and make it globally available, use Cargo:
+3.  **Execution (Apply):** Upon your approval, OpenSpec executes the "Spec", using its tools to read, modify, and create files, interact with the version control system (Git), and make the necessary changes to the code.
 
-```bash
-cargo install --path .
-```
+## ⚙️ Installation and Usage
 
-### Main Commands
+There are two ways to install and use OpenSpec, depending on your needs.
 
-Interaction with the agent is done through specific commands that function as "skills".
+### For End-Users (Recommended)
 
-#### 1. Propose a Change (`/rustsx:propose`)
+The easiest way to use OpenSpec is to download a pre-compiled binary for your operating system from the [Releases page](https://github.com/your-username/openrustspec/releases) on GitHub. This does **not** require you to have Rust installed.
 
-Use this command to ask the AI to create a specification proposal from a natural language idea.
-
-**Example:**
+1.  Download the `.zip` file for your OS (e.g., `openrustspec-x86_64-pc-windows-msvc.zip`).
+2.  Unzip the file.
+3.  Place the `openrustspec.exe` executable in a directory that is included in your system's PATH.
+4.  You can now run the tool from any terminal:
 
 ```bash
-agent /rustsx:propose "I want to create a REST API for a blog system with posts and comments"
+openrustspec propose "Your objective here"
 ```
 
-**What Happens:**
+*(Note: This will be configured in a future step on our roadmap.)*
 
-1.  The **CLI Adapter** (`openspec_cli`) parses the command.
-2.  It invokes the `CreateProposal` **Use Case** in the `Application` layer.
-3.  The use case calls the `LlmProvider` **Port**.
-4.  The **LLM Adapter** (e.g., `OpenAiAdapter`) is activated, sends the prompt to the AI, and translates the response into a `Proposal` domain entity.
-5.  The proposal is displayed to the user for approval.
+### For Developers
 
-#### 2. Apply a Proposal (`/rustsx:apply`)
-
-Once a proposal has been generated and approved, this command instructs the agent to create a detailed execution plan and then apply it.
-
-**Example:**
+If you are a Rust developer and want to build from source, you can install the tool directly from `crates.io` (once published) using `cargo`:
 
 ```bash
-agent /rustsx:apply
+cargo install openrustspec
 ```
 
-**What Happens (Roadmap):**
+This will compile the tool and install the `openrustspec` executable in your Cargo binary path (`~/.cargo/bin`).
 
-1.  The agent identifies the last approved proposal.
-2.  It uses the AI to generate a `Plan`, which is a list of concrete tasks (e.g., `CreateFile`, `ModifyFile`).
-3.  It asks for user confirmation to execute the plan.
-4.  It executes each task in the plan using the appropriate **Adapters** (e.g., `FileSystemAdapter` to create a file, `GitAdapter` to commit the change).
+---
 
-## Development Roadmap
+## ✅ Future Implementation Roadmap
 
--   [x] **Hexagonal Architecture Foundation**: Workspace and crates defined.
--   [x] **Proposal Flow (`/rustsx:propose`)**: Use case implemented with a mocked LLM.
--   [ ] **Application Flow (`/rustsx:apply`)**: Implement the use case to generate and execute plans.
--   [ ] **Real LLM Integration**: Replace the mock with a real adapter for OpenAI, reading the API key from a `config.yml` file.
--   [ ] **Persistence**: Implement a `Repository` to save and load the state of specifications and proposals.
--   [ ] **Code Generation**: Create `CodeGeneratorAdapters` that transform the specification into boilerplate code in various languages.
+This is the list of features that will transform OpenSpec into a complete framework:
+
+-   [ ] **Automated Plan Execution (`apply`):** Implement the functionality that interprets the AI-generated plan and applies the modifications (creating/editing files, etc.) to the project's source code.
+-   [ ] **File System Integration:** Ability to safely read, write, and modify project files.
+-   [ ] **Git Integration:** Ability to create new branches before applying changes, ensuring a non-destructive workflow.
+-   [ ] **Interactive Mode:** Allow the agent to ask the user questions to clarify ambiguities during execution. (e.g., "I couldn't find function X, did you mean function Y?").
+-   [ ] **Advanced CLI:** Use `clap` to pass objectives and configurations directly through the command line, instead of being hardcoded.
+-   [ ] **Support for Multiple AI Providers via Argument (`--provider`):** Create adapters for other APIs (e.g., OpenAI, Anthropic) and allow the user to select one via a command-line argument like `--provider openai`.
+-   [ ] **Setup Automated Releases:** Configure GitHub Actions to automatically build and release binaries (`.exe`, etc.) for Windows, macOS, and Linux on every new version tag.

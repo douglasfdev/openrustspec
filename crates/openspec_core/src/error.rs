@@ -1,13 +1,19 @@
+
 use thiserror::Error;
 
-#[derive(Error, Debug)]
-pub enum Error {
-    #[error("I/O Error: {0}")]
-    Io(#[from] std::io::Error),
+pub type Result<T> = std::result::Result<T, Error>;
 
-    #[error("LLM Provider Error: {0}")]
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error("LLM provider error: {0}")]
     LlmProvider(String),
 
-    #[error("Unknown error")]
-    Unknown,
+    #[error("Infrastructure error: {0}")]
+    Infrastructure(String),
+
+    #[error("YAML parsing error: {0}")]
+    YamlParsing(#[from] serde_yaml::Error),
+
+    #[error("Unknown error: {0}")]
+    Unknown(String),
 }

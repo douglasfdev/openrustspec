@@ -1,0 +1,20 @@
+
+[package]
+name = "openspec_cli"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "openrustspec"
+path = "src/main.rs"
+
+[dependencies]
+# Internal
+openspec_core = { workspace = true }
+openspec_adapters = { workspace = true }
+
+# External
+tokio = { workspace = true }
+anyhow = { workspace = true }
+clap = { workspace = true }
+serde_yaml = { workspace = true }

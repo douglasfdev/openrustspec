@@ -1,3 +1,4 @@
+
 [workspace]
 resolver = "2"
 members = [
@@ -6,13 +7,6 @@ members = [
 ]
 
 [workspace.dependencies]
-# Internal Crates
-openspec_core = { path = "crates/openspec_core" }
-openspec_cli = { path = "crates/openspec_cli" }
-openspec_llm = { path = "crates/openspec_llm" }
-openspec_fs = { path = "crates/openspec_fs" }
-openspec_vcs = { path = "crates/openspec_vcs" }
-
 # External Crates
 anyhow = "1.0"
 async-trait = "0.1"
@@ -21,6 +15,13 @@ clap = { version = "4.0", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_yaml = "0.9"
-thiserror = "1.0" # Note: Pinned to 1.0 for stability in this example
+thiserror = "1.0"
 tokio = { version = "1", features = ["full"] }
 uuid = { version = "1.8", features = ["v4", "serde"] }
+reqwest = { version = "0.12", features = ["json"] }
+git2 = "0.18"
+
+# Internal Crates
+openspec_core = { path = "crates/openspec_core" }
+openspec_adapters = { path = "crates/openspec_adapters" }
+openspec_engine = { path = "crates/openspec_engine" }
